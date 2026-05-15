@@ -244,9 +244,8 @@ export default function GlobalHealth() {
           </div>
         </div>
 
-        </div>
-
         <div className="relative">
+
 
           {/* Decorative Elements */}
           <div className="absolute -top-12 -left-12 w-64 h-64 bg-blue-400/10 blur-[100px] rounded-full animate-pulse"></div>
