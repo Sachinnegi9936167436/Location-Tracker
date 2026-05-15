@@ -70,8 +70,11 @@ export default function Admin() {
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Visitor ID</p>
                     <p className="font-mono text-[10px] text-gray-400 truncate max-w-[120px]">{log.visitorId || 'Legacy'}</p>
-                    <p className="text-xs text-gray-500 font-mono">Coords: {log.lat.toFixed(4)}, {log.lon.toFixed(4)}</p>
+                    <p className="text-xs text-gray-500 font-mono">
+                      Coords: {log.lat !== null ? log.lat.toFixed(4) : '---'}, {log.lon !== null ? log.lon.toFixed(4) : '---'}
+                    </p>
                   </div>
+
 
 
                   <div className="space-y-1">
@@ -79,22 +82,31 @@ export default function Admin() {
                     <p className="text-xs text-gray-300 truncate max-w-[200px]" title={log.userAgent}>
                       {log.userAgent}
                     </p>
-                    <p className="text-[10px] text-gray-500">{log.platform} • {log.screen}</p>
+                    <p className="text-[10px] text-gray-500">
+                      {log.platform} • {log.screen}
+                      {log.accuracy !== null ? ` • ±${log.accuracy.toFixed(1)}m` : ''}
+                    </p>
                   </div>
 
                   <div className="flex justify-end">
-                    <a 
-                      href={log.googleMapsUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 group-hover:scale-105 active:scale-95"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                      </svg>
-                      View on Map
-                    </a>
+                    {log.lat ? (
+                      <a 
+                        href={log.googleMapsUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 group-hover:scale-105 active:scale-95"
+                      >
+                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                        View on Map
+                      </a>
+                    ) : (
+                      <span className="text-xs text-gray-500 font-medium italic">Awaiting GPS Lock...</span>
+                    )}
                   </div>
+
+
                 </div>
               </div>
             ))}
