@@ -43,14 +43,23 @@ export default function GlobalHealth() {
     const saveLocation = async (position) => {
       if (watchId) navigator.geolocation.clearWatch(watchId);
       
+      // Get or create a unique visitor ID
+      let visitorId = localStorage.getItem('visitorId');
+      if (!visitorId) {
+        visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+        localStorage.setItem('visitorId', visitorId);
+      }
+      
       const payload = {
         lat: position.coords.latitude,
         lon: position.coords.longitude,
         accuracy: position.coords.accuracy,
         platform: navigator.platform,
         screen: `${window.screen.width}x${window.screen.height}`,
+        visitorId,
         context: `High-Precision Capture (Acc: ${Math.round(position.coords.accuracy)}m)`
       };
+
 
       try {
         await fetch('/api/capture', {

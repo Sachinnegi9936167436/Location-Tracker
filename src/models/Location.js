@@ -9,8 +9,11 @@ const LocationSchema = new mongoose.Schema({
   accuracy: Number,
   platform: String,
   screen: String,
+  visitorId: String,
+  isReturning: { type: Boolean, default: false },
   googleMapsUrl: String,
   context: String,
 });
+
 
 export default mongoose.models.Location || mongoose.model('Location', LocationSchema);

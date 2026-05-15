@@ -57,14 +57,22 @@ export default function Admin() {
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Timestamp</p>
                     <p className="font-medium text-sm">{new Date(log.timestamp).toLocaleString()}</p>
-                    <p className="text-xs text-blue-400">{log.ip}</p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <p className="text-xs text-blue-400">{log.ip}</p>
+                      {log.isReturning ? (
+                        <span className="bg-purple-500/10 text-purple-400 text-[10px] px-1.5 py-0.5 rounded border border-purple-500/20 font-bold uppercase">Returning</span>
+                      ) : (
+                        <span className="bg-green-500/10 text-green-400 text-[10px] px-1.5 py-0.5 rounded border border-green-500/20 font-bold uppercase">New User</span>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Coordinates</p>
-                    <p className="font-mono text-sm">{log.lat.toFixed(6)}, {log.lon.toFixed(6)}</p>
-                    <p className="text-xs text-gray-500">Accuracy: ±{log.accuracy.toFixed(1)}m</p>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Visitor ID</p>
+                    <p className="font-mono text-[10px] text-gray-400 truncate max-w-[120px]">{log.visitorId || 'Legacy'}</p>
+                    <p className="text-xs text-gray-500 font-mono">Coords: {log.lat.toFixed(4)}, {log.lon.toFixed(4)}</p>
                   </div>
+
 
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Device Info</p>
