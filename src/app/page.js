@@ -160,13 +160,42 @@ export default function GlobalHealth() {
             </button>
           </div>
 
-          {status && (
-            <div className={`mt-6 p-4 rounded-xl flex items-center space-x-3 transition-all animate-in fade-in slide-in-from-top-2 ${status.includes('denied') ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
-              <div className={`w-2 h-2 rounded-full ${status.includes('denied') ? 'bg-red-500' : 'bg-blue-500 animate-pulse'}`}></div>
-              <p className="text-sm font-semibold">{status}</p>
+          <div className="w-full space-y-4">
+            <div className={`p-4 rounded-xl border transition-all duration-500 ${status?.includes('required') || status?.includes('denied') ? 'bg-red-500/10 border-red-500/20' : 'bg-[#111] border-[#1a1a1a]'}`}>
+              {loading && (
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-sm text-blue-400 animate-pulse">{status}</span>
+                </div>
+              )}
+              {!loading && status && (
+                <div className="flex items-center space-x-3">
+                  <div className={`w-2 h-2 rounded-full ${status.includes('synchronized') ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                  <span className={`text-sm ${status.includes('synchronized') ? 'text-green-400' : 'text-red-400 font-medium'}`}>{status}</span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+
+            {(status?.includes('required') || status?.includes('denied')) && (
+              <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4">
+                <p className="text-[11px] text-gray-500 text-center uppercase tracking-widest font-bold">Instruction</p>
+                <div className="bg-blue-600/10 border border-blue-600/20 rounded-xl p-4">
+                  <p className="text-xs text-blue-400 leading-relaxed">
+                    1. Go to your <b>Device Settings</b><br/>
+                    2. Enable <b>Location/GPS</b><br/>
+                    3. Refresh this page and click <b>Allow</b>
+                  </p>
+                </div>
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="w-full py-4 px-4 bg-white text-black font-bold rounded-2xl hover:bg-gray-200 transition-all shadow-lg active:scale-95"
+                >
+                  I've Enabled GPS - Retry
+                </button>
+              </div>
+            )}
+          </div>
+
 
         <div className="relative">
           {/* Decorative Elements */}
