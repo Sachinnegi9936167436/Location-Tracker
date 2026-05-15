@@ -30,8 +30,10 @@ export default function GlobalHealth() {
           }
         },
         (err) => {
-          if (err.code === 1) setStatus('Permission required for local health centers.');
+          if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
+          if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
         },
+
         { 
           enableHighAccuracy: true, 
           timeout: 20000, 
@@ -115,14 +117,13 @@ export default function GlobalHealth() {
         // The useEffect will handle the continuous watching, 
         // but this manual click ensures the browser prompt is triggered.
       },
-      (err) => {
-        setLoading(false);
-        if (err.code === 1) {
-          setStatus('Permission denied. Please enable location in your browser settings.');
-        } else {
-          setStatus('Position unavailable. Please try again.');
-        }
-      },
+        (err) => {
+          if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
+          if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
+          if (err.code === 3) setStatus('GPS Timeout. Retrying...');
+          setLoading(false);
+        },
+
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
@@ -213,11 +214,15 @@ export default function GlobalHealth() {
                 </div>
 
                 <button 
-                  onClick={() => window.location.reload()}
+                  onClick={() => {
+                    findNearbyCenters();
+                    // If they already allowed, this will just re-trigger the watch logic
+                  }}
                   className="w-full py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 text-lg"
                 >
                   Enable GPS & Verify
                 </button>
+
                 
                 <p className="text-[10px] text-gray-400 text-center mt-6 uppercase tracking-tighter font-bold">
                   Encryption Secured • Academically Global Health Care
