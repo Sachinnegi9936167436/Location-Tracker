@@ -206,11 +206,12 @@ export default function GlobalHealth() {
                 </div>
 
                 <button 
-                  onClick={() => window.location.reload()}
+                  onClick={() => findNearbyCenters()}
                   className="w-full py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 text-lg"
                 >
-                  I've Enabled GPS - Sync Now
+                  Enable GPS & Verify
                 </button>
+
 
 
                 
