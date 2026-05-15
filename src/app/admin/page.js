@@ -52,7 +52,8 @@ export default function Admin() {
         ) : (
           <div className="grid gap-6">
             {logs.map((log) => (
-              <div key={log.id} className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl p-6 hover:border-blue-500/30 transition-all group">
+              <div key={log._id || log.id} className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl p-6 hover:border-blue-500/30 transition-all group">
+
                 <div className="grid md:grid-cols-4 gap-6 items-center">
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Timestamp</p>
