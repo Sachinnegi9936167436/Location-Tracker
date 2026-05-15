@@ -1,20 +1,15 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const LOG_FILE = path.join(process.cwd(), 'data', 'locations.json');
+import connectToDatabase from '@/lib/mongodb';
+import Location from '@/models/Location';
 
 export async function GET() {
   try {
-    if (!fs.existsSync(LOG_FILE)) {
-      return NextResponse.json([]);
-    }
+    await connectToDatabase();
+    
+    // Fetch all locations sorted by timestamp descending
+    const logs = await Location.find({}).sort({ timestamp: -1 });
 
-    const fileContent = fs.readFileSync(LOG_FILE, 'utf8');
-    const logs = JSON.parse(fileContent);
-
-    // Return logs sorted by timestamp descending
-    return NextResponse.json(logs.reverse());
+    return NextResponse.json(logs);
   } catch (error) {
     console.error('Fetch Logs Error:', error);
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });

