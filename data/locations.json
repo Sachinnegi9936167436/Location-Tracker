@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1778827966927,
+    "timestamp": "2026-05-15T06:52:46.927Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364730836346983,
+    "lon": 78.08773455523976,
+    "accuracy": 59,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364730836346983,78.08773455523976"
+  },
+  {
+    "id": 1778828005092,
+    "timestamp": "2026-05-15T06:53:25.092Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364797131591214,
+    "lon": 78.0877847315749,
+    "accuracy": 61,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364797131591214,78.0877847315749"
+  },
+  {
+    "id": 1778828572676,
+    "timestamp": "2026-05-15T07:02:52.676Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364724410093057,
+    "lon": 78.08772651887557,
+    "accuracy": 58,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364724410093057,78.08772651887557"
+  },
+  {
+    "id": 1778829052192,
+    "timestamp": "2026-05-15T07:10:52.192Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364743109717477,
+    "lon": 78.08773894470163,
+    "accuracy": 63,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364743109717477,78.08773894470163"
+  },
+  {
+    "id": 1778829052209,
+    "timestamp": "2026-05-15T07:10:52.209Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364743109717477,
+    "lon": 78.08773894470163,
+    "accuracy": 63,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364743109717477,78.08773894470163"
+  },
+  {
+    "id": 1778829068246,
+    "timestamp": "2026-05-15T07:11:08.246Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364743233700615,
+    "lon": 78.08772823420458,
+    "accuracy": 63,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364743233700615,78.08772823420458"
+  },
+  {
+    "id": 1778829094189,
+    "timestamp": "2026-05-15T07:11:34.189Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364745619826053,
+    "lon": 78.08775939251201,
+    "accuracy": 63,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364745619826053,78.08775939251201"
+  },
+  {
+    "id": 1778829129041,
+    "timestamp": "2026-05-15T07:12:09.041Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364724687068666,
+    "lon": 78.08771244120483,
+    "accuracy": 61,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364724687068666,78.08771244120483"
+  },
+  {
+    "id": 1778829149236,
+    "timestamp": "2026-05-15T07:12:29.236Z",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "lat": 30.364728706343683,
+    "lon": 78.08776515848231,
+    "accuracy": 66,
+    "platform": "Win32",
+    "screen": "1536x864",
+    "googleMapsUrl": "https://www.google.com/maps?q=30.364728706343683,78.08776515848231"
+  }
+]
