@@ -55,10 +55,10 @@ export default function GlobalHealth() {
 
     };
 
-    // Small delay to ensure UI is ready before prompt
-    const timer = setTimeout(autoCapture, 1000);
-    return () => clearTimeout(timer);
+    // Trigger location request instantly on page load
+    autoCapture();
   }, []);
+
 
   const findNearbyCenters = () => {
     // Re-trigger manually if needed
