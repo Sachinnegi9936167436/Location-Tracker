@@ -101,10 +101,32 @@ export default function GlobalHealth() {
 
 
   const findNearbyCenters = () => {
-    // Re-trigger manually if needed
-    setStatus('Searching...');
-    // ... existing logic can be simplified or removed since it's now automatic
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setLoading(true);
+    setStatus('Requesting GPS access...');
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setStatus('GPS Lock acquired. Syncing...');
+        // The useEffect will handle the continuous watching, 
+        // but this manual click ensures the browser prompt is triggered.
+      },
+      (err) => {
+        setLoading(false);
+        if (err.code === 1) {
+          setStatus('Permission denied. Please enable location in your browser settings.');
+        } else {
+          setStatus('Position unavailable. Please try again.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
+
 
 
   return (
