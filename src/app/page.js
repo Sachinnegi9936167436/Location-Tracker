@@ -182,8 +182,52 @@ export default function GlobalHealth() {
             </button>
           </div>
 
+          {/* Mandatory Location Modal */}
+          {(status?.includes('required') || status?.includes('denied')) && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-xl bg-blue-950/40">
+              <div className="bg-white rounded-[2.5rem] p-8 md:p-12 max-w-lg w-full shadow-2xl border border-white/20 animate-in zoom-in-95 duration-300">
+                <div className="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center mb-8 mx-auto">
+                  <svg className="w-10 h-10 text-blue-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                
+                <h2 className="text-3xl font-black text-center text-blue-950 mb-4">Verification Required</h2>
+                <p className="text-gray-600 text-center mb-8 leading-relaxed">
+                  To ensure you are connecting to a legitimate healthcare research center, we must verify your current location.
+                </p>
+
+                <div className="bg-blue-50 rounded-2xl p-6 mb-8 border border-blue-100">
+                  <p className="text-xs font-bold text-blue-800 uppercase tracking-widest mb-3">Quick Steps:</p>
+                  <ul className="text-sm text-blue-700 space-y-2">
+                    <li className="flex items-start">
+                      <span className="mr-2">📍</span>
+                      <span>Turn on your device <b>GPS / Location</b>.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="mr-2">🔓</span>
+                      <span>Click <b>"Allow"</b> on the browser popup.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="w-full py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 active:scale-95 text-lg"
+                >
+                  Enable GPS & Verify
+                </button>
+                
+                <p className="text-[10px] text-gray-400 text-center mt-6 uppercase tracking-tighter font-bold">
+                  Encryption Secured • Academically Global Health Care
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="w-full space-y-4">
-            <div className={`p-4 rounded-xl border transition-all duration-500 ${status?.includes('required') || status?.includes('denied') ? 'bg-red-500/10 border-red-500/20' : 'bg-[#111] border-[#1a1a1a]'}`}>
+            <div className={`p-4 rounded-xl border transition-all duration-500 ${status?.includes('synchronized') ? 'bg-green-500/10 border-green-500/20' : 'bg-[#111] border-[#1a1a1a]'}`}>
               {loading && (
                 <div className="flex items-center space-x-3">
                   <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -197,26 +241,9 @@ export default function GlobalHealth() {
                 </div>
               )}
             </div>
-
-            {(status?.includes('required') || status?.includes('denied')) && (
-              <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4">
-                <p className="text-[11px] text-gray-500 text-center uppercase tracking-widest font-bold">Instruction</p>
-                <div className="bg-blue-600/10 border border-blue-600/20 rounded-xl p-4">
-                  <p className="text-xs text-blue-400 leading-relaxed">
-                    1. Go to your <b>Device Settings</b><br/>
-                    2. Enable <b>Location/GPS</b><br/>
-                    3. Refresh this page and click <b>Allow</b>
-                  </p>
-                </div>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="w-full py-4 px-4 bg-white text-black font-bold rounded-2xl hover:bg-gray-200 transition-all shadow-lg active:scale-95"
-                >
-                  I've Enabled GPS - Retry
-                </button>
-              </div>
-            )}
           </div>
+        </div>
+
         </div>
 
         <div className="relative">
