@@ -253,22 +253,7 @@ export default function GlobalHealth() {
             </div>
           )}
 
-          <div className="w-full space-y-4 mt-8">
-            <div className={`p-4 rounded-xl border transition-all duration-500 ${status?.includes('synchronized') ? 'bg-green-500/10 border-green-500/20' : 'bg-gray-50 border-gray-200'}`}>
-              {loading && (
-                <div className="flex items-center space-x-3">
-                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-sm font-mono text-blue-800">{status}</span>
-                </div>
-              )}
-              {!loading && status && (
-                <div className="flex items-center space-x-3">
-                  <div className={`w-2 h-2 rounded-full ${status.includes('synchronized') ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className={`text-sm font-mono ${status.includes('synchronized') ? 'text-green-700' : 'text-red-700 font-medium'}`}>{status}</span>
-                </div>
-              )}
-            </div>
-          </div>
+
         </div>
 
         <div className="relative hidden md:block">
