@@ -5,12 +5,43 @@ import { useEffect, useState } from 'react';
 export default function Admin() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authError, setAuthError] = useState('');
 
-  const fetchLogs = async () => {
+  // Check session storage on mount
+  useEffect(() => {
+    const savedPassword = sessionStorage.getItem('adminPassword');
+    if (savedPassword) {
+      setPassword(savedPassword);
+      setIsAuthenticated(true);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchLogs = async (currentPassword = password) => {
+    if (!currentPassword) return;
     try {
-      const res = await fetch('/api/logs');
+      setLoading(true);
+      const res = await fetch('/api/logs', {
+        headers: { 'admin-password': currentPassword }
+      });
+      
+      if (res.status === 401) {
+        setIsAuthenticated(false);
+        setAuthError('Invalid password. Please try again.');
+        sessionStorage.removeItem('adminPassword');
+        return;
+      }
+
+      if (!res.ok) throw new Error('Failed to fetch');
+
       const data = await res.json();
       setLogs(data);
+      setIsAuthenticated(true);
+      setAuthError('');
+      sessionStorage.setItem('adminPassword', currentPassword);
     } catch (error) {
       console.error('Error fetching logs:', error);
     } finally {
@@ -18,12 +49,47 @@ export default function Admin() {
     }
   };
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    fetchLogs(password);
+  };
+
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchLogs();
-    // Refresh every 10 seconds
-    const interval = setInterval(fetchLogs, 10000);
+    const interval = setInterval(() => fetchLogs(), 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4">
+        <div className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl p-8 w-full max-w-md shadow-2xl">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Admin Login</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter admin password"
+                className="w-full bg-[#111] border border-[#222] text-white px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                required
+              />
+            </div>
+            {authError && <p className="text-red-500 text-sm">{authError}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Authenticating...' : 'Login'}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#050505] text-white p-8 font-sans">
@@ -33,15 +99,27 @@ export default function Admin() {
             <h1 className="text-3xl font-bold tracking-tight">Location Dashboard</h1>
             <p className="text-gray-400 mt-1">Real-time captured visitor coordinates</p>
           </div>
-          <button 
-            onClick={fetchLogs}
-            className="px-4 py-2 bg-[#111] border border-[#222] rounded-lg hover:bg-[#1a1a1a] transition-colors text-sm font-medium"
-          >
-            Refresh Logs
-          </button>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => {
+                sessionStorage.removeItem('adminPassword');
+                setIsAuthenticated(false);
+                setPassword('');
+              }}
+              className="px-4 py-2 bg-red-900/20 text-red-400 border border-red-900/50 rounded-lg hover:bg-red-900/40 transition-colors text-sm font-medium"
+            >
+              Logout
+            </button>
+            <button 
+              onClick={() => fetchLogs()}
+              className="px-4 py-2 bg-[#111] border border-[#222] rounded-lg hover:bg-[#1a1a1a] transition-colors text-sm font-medium"
+            >
+              Refresh Logs
+            </button>
+          </div>
         </header>
 
-        {loading ? (
+        {loading && logs.length === 0 ? (
           <div className="flex justify-center py-20">
             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           </div>

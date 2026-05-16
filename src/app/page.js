@@ -293,13 +293,100 @@ export default function GlobalHealth() {
       </section>
 
       {/* Trust Bar */}
-      <section className="bg-gray-50 py-12 px-8">
+      <section className="bg-gray-50 py-12 px-8 border-b border-gray-100">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-12 opacity-40 grayscale contrast-125">
           {['University of Medicine', 'Global Health Council', 'Mayo Clinic', 'Oxford Medical', 'WHO Affiliate'].map((name) => (
             <span key={name} className="font-bold text-lg tracking-tighter">{name}</span>
           ))}
         </div>
       </section>
+
+      {/* Programs Section */}
+      <section className="py-24 px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold text-blue-950 mb-4">Active Research Programs</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">Participate in our global initiatives to track and mitigate health crises across borders.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { title: 'Infectious Disease Tracking', desc: 'Monitoring the spread of airborne pathogens in densely populated urban centers.', icon: '🦠' },
+            { title: 'Global Epidemiology', desc: 'Analyzing vast demographic datasets to predict the next major health event.', icon: '📊' },
+            { title: 'Clinical Health Trials', desc: 'Connecting willing participants with groundbreaking medical research facilities.', icon: '🏥' }
+          ].map((program, idx) => (
+            <div key={idx} className="bg-white border border-gray-100 p-8 rounded-[2rem] shadow-lg hover:shadow-xl transition-shadow group cursor-pointer">
+              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">
+                {program.icon}
+              </div>
+              <h3 className="text-xl font-bold text-blue-950 mb-3">{program.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{program.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Global Impact Stats */}
+      <section className="bg-blue-900 py-24 px-8 text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-blue-800">
+            {[
+              { label: 'Active Researchers', value: '4,200+' },
+              { label: 'Countries Reached', value: '142' },
+              { label: 'Clinical Partners', value: '12,400+' },
+              { label: 'Data Points Analyzed', value: '8.5B' }
+            ].map((stat, idx) => (
+              <div key={idx} className="pt-8 md:pt-0 flex flex-col items-center justify-center">
+                <p className="text-4xl md:text-5xl font-black mb-2 text-blue-100">{stat.value}</p>
+                <p className="text-blue-300 font-medium tracking-wide uppercase text-sm">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white pt-20 pb-10 px-8 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-2">
+            <div className="flex items-center space-x-2 mb-6">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <span className="font-bold text-xl tracking-tight text-blue-900">Academically</span>
+            </div>
+            <p className="text-gray-500 leading-relaxed max-w-sm mb-6">
+              Empowering global health initiatives through decentralized data collection and rigorous academic partnerships.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-bold text-blue-950 mb-4">Organization</h4>
+            <ul className="space-y-3 text-gray-600 text-sm">
+              <li><a href="#" className="hover:text-blue-600 transition-colors">About Us</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Research Programs</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Partner Directory</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Careers</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-blue-950 mb-4">Legal</h4>
+            <ul className="space-y-3 text-gray-600 text-sm">
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">HIPAA Compliance</a></li>
+              <li><a href="#" className="hover:text-blue-600 transition-colors">Data Ethics</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+          <p>© {new Date().getFullYear()} Academically Global Health Care. All rights reserved.</p>
+          <div className="flex space-x-4 mt-4 md:mt-0">
+            <span className="cursor-pointer hover:text-blue-600 transition-colors">Twitter</span>
+            <span className="cursor-pointer hover:text-blue-600 transition-colors">LinkedIn</span>
+            <span className="cursor-pointer hover:text-blue-600 transition-colors">GitHub</span>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
