@@ -24,6 +24,7 @@ export default function Admin() {
     if (!currentPassword) return;
     try {
       setLoading(true);
+      setAuthError('');
       const res = await fetch('/api/logs', {
         headers: { 'admin-password': currentPassword }
       });
@@ -35,7 +36,12 @@ export default function Admin() {
         return;
       }
 
-      if (!res.ok) throw new Error('Failed to fetch');
+      if (!res.ok) {
+        setAuthError(`Server Error (${res.status}). Check Vercel logs or MongoDB connection.`);
+        setIsAuthenticated(false);
+        sessionStorage.removeItem('adminPassword');
+        return;
+      }
 
       const data = await res.json();
       setLogs(data);
@@ -44,6 +50,7 @@ export default function Admin() {
       sessionStorage.setItem('adminPassword', currentPassword);
     } catch (error) {
       console.error('Error fetching logs:', error);
+      setAuthError('Network error connecting to the server.');
     } finally {
       setLoading(false);
     }
