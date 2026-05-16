@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Location from '@/models/Location';
+import { UAParser } from 'ua-parser-js';
 
 export async function POST(req) {
   try {
@@ -12,6 +13,12 @@ export async function POST(req) {
     const ip = req.headers.get('x-forwarded-for') || req.ip || 'Unknown';
     const userAgent = req.headers.get('user-agent') || 'Unknown';
 
+    // Parse User-Agent for specific device model
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+    const deviceVendor = result.device.vendor || 'Unknown';
+    const deviceModel = result.device.model || 'Unknown';
+
     // Check if this visitor has been here before
     const existingVisit = await Location.findOne({ visitorId });
     const isReturning = !!existingVisit;
@@ -19,6 +26,8 @@ export async function POST(req) {
     const newLocation = new Location({
       ip,
       userAgent,
+      deviceVendor,
+      deviceModel,
       lat,
       lon,
       accuracy,

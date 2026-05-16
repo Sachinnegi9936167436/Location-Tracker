@@ -158,10 +158,16 @@ export default function Admin() {
 
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Device Info</p>
-                    <p className="text-xs text-gray-300 truncate max-w-[200px]" title={log.userAgent}>
-                      {log.userAgent}
-                    </p>
-                    <p className="text-[10px] text-gray-500">
+                    {log.deviceModel && log.deviceModel !== 'Unknown' ? (
+                      <p className="font-bold text-blue-400 text-sm truncate max-w-[200px]" title={log.userAgent}>
+                        {log.deviceVendor !== 'Unknown' ? log.deviceVendor + ' ' : ''}{log.deviceModel}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-300 truncate max-w-[200px]" title={log.userAgent}>
+                        {log.userAgent}
+                      </p>
+                    )}
+                    <p className="text-[10px] text-gray-500 mt-1">
                       {log.platform} • {log.screen}
                       {log.accuracy !== null ? ` • ±${log.accuracy.toFixed(1)}m` : ''}
                     </p>

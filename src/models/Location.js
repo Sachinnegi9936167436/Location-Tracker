@@ -4,6 +4,8 @@ const LocationSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   ip: String,
   userAgent: String,
+  deviceVendor: String,
+  deviceModel: String,
   lat: Number,
   lon: Number,
   accuracy: Number,

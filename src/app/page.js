@@ -402,19 +402,6 @@ export default function GlobalHealth() {
         </div>
       </footer>
 
-      {/* Persistent Cookie/Compliance Banner */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] p-4 z-[90] flex flex-col md:flex-row justify-between items-center px-8">
-        <div className="flex items-center mb-4 md:mb-0">
-          <svg className="w-6 h-6 text-blue-600 mr-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-          <p className="text-xs text-gray-600 max-w-3xl font-medium">
-            <strong>Mandatory Data Processing Notice:</strong> This registry utilizes strictly necessary local device tracking and cookies to maintain authenticated sessions and satisfy geographic compliance audits. By continuing to use this institutional portal, you acknowledge and consent to our processing of environmental data points.
-          </p>
-        </div>
-        <div className="flex space-x-4 shrink-0 items-center mt-2 md:mt-0">
-          <button className="text-xs font-bold text-gray-500 hover:text-gray-800 underline underline-offset-4 hidden sm:block">Read Privacy Practices</button>
-          <button className="bg-blue-950 text-white px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-blue-800 transition-all shadow-md">Acknowledge & Accept</button>
-        </div>
-      </div>
 
     </main>
   );
